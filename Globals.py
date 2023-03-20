@@ -1,6 +1,7 @@
 import pygame
 from pathfinding.core.grid import Grid
 from pathfinding.finder.a_star import AStarFinder
+from pathfinding.core.diagonal_movement import DiagonalMovement
 from pygame.sprite import Sprite, collide_rect
 
 
@@ -19,7 +20,7 @@ WINDOW_SIZE = (RESOLUTION_X, RESOLUTION_Y)
 SCREEN_WIDTH = RESOLUTION_X
 SCREEN_HEIGHT = int(RESOLUTION_Y)
 SCREEN_SIZE = (SCREEN_WIDTH, SCREEN_HEIGHT)
-print(SCREEN_SIZE)
+# print(SCREEN_SIZE)
 
 
 # BLOCKS
@@ -32,5 +33,19 @@ LEFT = 2
 UP = 3
 
 PLAYER_ROT_SPEED = 20
-PLAYER_SPEED = 20
+PLAYER_SPEED = 40
 PLAYER_HIT_RECT = pygame.Rect(0, 0, 35, 35)
+
+Wall_List = []
+
+
+def matrix_generator():  # Преобразование .txt файла в двумерный список [[0,0,0],[1,1,1], .....]
+    with open("images/MAP.txt") as MAP:
+        data = MAP.readlines()
+    for i in range(len(data)):
+        data[i] = list(map(int, data[i].strip()))
+    return data
+
+matrix = matrix_generator()
+a = matrix
+
