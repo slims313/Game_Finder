@@ -1,4 +1,5 @@
 import pygame
+import numpy as np
 from pathfinding.core.grid import Grid
 from pathfinding.finder.a_star import AStarFinder
 from pathfinding.core.diagonal_movement import DiagonalMovement
@@ -6,46 +7,52 @@ from pygame.sprite import Sprite, collide_rect
 
 
 vec = pygame.math.Vector2
-# FPS
 FPS = 120
 
 LIGHTGRAY = (100, 100, 100)
 
-# WINDOW
-RESOLUTION_X = 1000
-RESOLUTION_Y = 1000
+# 1. BLOCKS
+BLOCK_SIZE = 50
+Wall_List = []
+
+# 2. MATRIX
+matrix = np.loadtxt('matrix', dtype=int)
+np.savetxt('matrix', matrix, fmt='%d', delimiter='')
+
+# 4. LEVEL
+with open("matrix") as MAP:
+    LEVEL_1 = [line.strip() for line in MAP]
+
+total_level_width = len(LEVEL_1[1]) * BLOCK_SIZE
+total_level_height = len(LEVEL_1) * BLOCK_SIZE
+
+# 2. WINDOW
+RESOLUTION_X = total_level_width
+RESOLUTION_Y = total_level_height
 WINDOW_SIZE = (RESOLUTION_X, RESOLUTION_Y)
 
-# SCREEN
+# 3. SCREEN
 SCREEN_WIDTH = RESOLUTION_X
 SCREEN_HEIGHT = int(RESOLUTION_Y)
 SCREEN_SIZE = (SCREEN_WIDTH, SCREEN_HEIGHT)
-# print(SCREEN_SIZE)
 
 
-# BLOCKS
-BLOCK_SIZE = 50
-# OBJECTS
-# Movement
-RIGHT = 0
-DOWN = 1
-LEFT = 2
-UP = 3
-
-PLAYER_ROT_SPEED = 20
-PLAYER_SPEED = 40
-PLAYER_HIT_RECT = pygame.Rect(0, 0, 35, 35)
-
-Wall_List = []
 
 
-def matrix_generator():  # Преобразование .txt файла в двумерный список [[0,0,0],[1,1,1], .....]
-    with open("images/MAP.txt") as MAP:
-        data = MAP.readlines()
-    for i in range(len(data)):
-        data[i] = list(map(int, data[i].strip()))
-    return data
 
-matrix = matrix_generator()
-a = matrix
 
+# with open("images/MAP.txt") as MAP:
+#     data = MAP.readlines()
+# def matrix_generator():  # Преобразование .txt файла в двумерный список [[0,0,0],[1,1,1], .....]
+#     for i in range(len(data)):
+#         data[i] = list(map(int, data[i].strip()))
+#     return data
+# matrix = np.loadtxt('matrix', dtype=int)
+# np.savetxt('matrix', matrix, fmt='%d', delimiter='')
+# matrix = np.loadtxt('matrix', dtype=int)
+
+
+# NEXT
+# np.savetxt('matrix', matrix, fmt='%d', delimiter='')
+# c = np.loadtxt('matrix', dtype=int)
+# print(c)

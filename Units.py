@@ -29,7 +29,7 @@ class Player(Unit):
         self.rot = 0
         self.rot_speed = 0
         self.direction = pygame.math.Vector2(0, 0)
-        self.pf = Pathfinder(a)
+        self.pf = Pathfinder(matrix)
 
     def empty_path(self):
         self.path = []
@@ -41,7 +41,7 @@ class Player(Unit):
 
     def create_path(self):
         # start
-        self.pf.grid = Grid(matrix=a)
+        self.pf.grid = Grid(matrix=matrix)
         start_x, start_y = self.get_coord()
         start = self.pf.grid.node(start_x, start_y)
 
@@ -60,7 +60,7 @@ class Player(Unit):
         try:
             self.current = [self.path[1][0] * BLOCK_SIZE + BLOCK_SIZE // 2,
                     self.path[1][1] * BLOCK_SIZE + BLOCK_SIZE // 2]
-            print(self.current)
+            # print(self.current)
         except:
             pass
         self.create_collision_rects()
@@ -76,7 +76,7 @@ class Player(Unit):
 
     def check_collisions(self):
         if self.collision_rects:
-            print("Workspace: check_collision")
+            # print("Workspace: check_collision")
             for rect in self.collision_rects:
                 if rect.collidepoint(self.pos):
                     self.empty_path()
@@ -87,7 +87,7 @@ class Player(Unit):
 
     def automove_to_target(self, dt):
         if self.target:
-            print("Workspace: automove_to_target")
+            # print("Workspace: automove_to_target")
             target_dist = self.current - self.pos
             if target_dist.length_squared() > self.speed*10:
                 self.movement(dt, target_dist, self.speed)
@@ -98,7 +98,7 @@ class Player(Unit):
 
     def draw_path(self):
         if self.path:
-            print("Workspace: draw_path")
+            # print("Workspace: draw_path")
             points = []
             for point in self.path:
                 x = (point[0] * BLOCK_SIZE) + BLOCK_SIZE//2
