@@ -6,7 +6,7 @@ class Pathfinder:
 
 		# setup
 		self.matrix = matrix
-		self.grid = Grid(matrix=a)
+		self.grid = Grid(matrix=matrix)
 
 		# pathfinding
 		self.path = []

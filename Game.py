@@ -27,6 +27,8 @@ class Game:
 
                 if e.key == pygame.K_ESCAPE:
                     self.quit()
+                if e.key == pygame.K_g:
+                    self.save_level()
 
             if e.type == pygame.MOUSEBUTTONDOWN:
                 if e.button == 1:
@@ -42,14 +44,15 @@ class Game:
                         Wall_List.remove([pygame.mouse.get_pos()[0]//BLOCK_SIZE, pygame.mouse.get_pos()[1]//BLOCK_SIZE])
                     except:
                         pass
-                    a[int(mpos[1])][int(mpos[0])] = 1
+                    matrix[int(mpos[1])][int(mpos[0])] = 1
 
                 if e.button == 3:
                     mpos = vec(pygame.mouse.get_pos()) // BLOCK_SIZE
                     if [pygame.mouse.get_pos()[0]//BLOCK_SIZE, pygame.mouse.get_pos()[1]//BLOCK_SIZE] not in Wall_List:
                         Wall_List.append([pygame.mouse.get_pos()[0]//BLOCK_SIZE, pygame.mouse.get_pos()[1]//BLOCK_SIZE])
-                    a[int(mpos[1])][int(mpos[0])] = 0
-
+                    matrix[int(mpos[1])][int(mpos[0])] = 0
+                # print(matrix)
+                print(Wall_List)
 
     def draw_grid(self):  # СЕТКА
         for x in range(0, SCREEN_WIDTH, BLOCK_SIZE):
@@ -64,6 +67,9 @@ class Game:
         rect = pygame.Rect((col * BLOCK_SIZE, row * BLOCK_SIZE), (BLOCK_SIZE, BLOCK_SIZE))
         screen.blit(select_surf, rect)
 
+    def save_level(self):
+        np.savetxt('matrix', matrix, fmt='%d')
+
     def update(self):
         self.key_press()
 
@@ -77,11 +83,12 @@ class Game:
         screen.fill((0, 0, 0))
         self.draw_grid()
         self.draw_active_cell()
-        for i in UnitsGroup:
-            screen.blit(i.image, (i.rect.x, i.rect.y))
 
         for i in Wall_List:
             screen.blit(Wall_image, (i[0]*BLOCK_SIZE, i[1]*BLOCK_SIZE))
+
+        for i in UnitsGroup:
+            screen.blit(i.image, (i.rect.x, i.rect.y))
 
         pygame.display.flip()
 
