@@ -51,8 +51,6 @@ class Game:
                     if [pygame.mouse.get_pos()[0]//BLOCK_SIZE, pygame.mouse.get_pos()[1]//BLOCK_SIZE] not in Wall_List:
                         Wall_List.append([pygame.mouse.get_pos()[0]//BLOCK_SIZE, pygame.mouse.get_pos()[1]//BLOCK_SIZE])
                     matrix[int(mpos[1])][int(mpos[0])] = 0
-                # print(matrix)
-                print(Wall_List)
 
     def draw_grid(self):  # СЕТКА
         for x in range(0, SCREEN_WIDTH, BLOCK_SIZE):

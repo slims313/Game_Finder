@@ -1,3 +1,3 @@
 from Units import *
 
-hero = Player(imag, 0, 0)
+hero = Player(imag, 50, 50)

@@ -1,6 +1,9 @@
 from PathFinder import *
 
 
+a = (0, )
+
+
 class Unit(pygame.sprite.Sprite):
     def __init__(self, imag, x_pos, y_pos):
 
@@ -23,13 +26,16 @@ class Player(Unit):
     def __init__(self, imag, x_pos, y_pos):
         super().__init__(imag, x_pos, y_pos)
 
-        self.speed = 2
+        self.speed = 15
         self.vel = vec(0, 0)
         self.pos = vec(x_pos, y_pos)
         self.rot = 0
         self.rot_speed = 0
         self.direction = pygame.math.Vector2(0, 0)
         self.pf = Pathfinder(matrix)
+
+        self.radars = []
+        self.collision_points = []
 
     def empty_path(self):
         self.path = []
@@ -124,13 +130,74 @@ class Player(Unit):
         self.acc += self.vel * -1
         self.vel += self.acc * dt
         self.pos += self.vel * dt + 0.5 * self.acc * dt ** 2
+
     def stop(self):
         self.rot_speed = 0
         self.vel = vec(0, 0)
+
+    def compute_radars(self, degree):
+        length = 0
+        x = int(self.pos[0] + math.cos(math.radians(360 - (self.rot + degree))) * length)
+        y = int(self.pos[1] + math.sin(math.radians(360 - (self.rot + degree))) * length)
+        try:
+            while not screen.get_at((x, y)) == walls and length < 150:
+                length = length + 1
+                x = int(self.pos[0] + math.cos(math.radians(360 - (self.rot + degree))) * length)
+                y = int(self.pos[1] + math.sin(math.radians(360 - (self.rot + degree))) * length)
+        except:
+            pass
+
+        dist = int(math.sqrt(math.pow(x - self.pos[0], 2) + math.pow(y - self.pos[1], 2)))
+        self.radars.append([(x, y), dist])
+
+    def compute_collision_points(self):
+        lw = BLOCK_SIZE - BLOCK_SIZE * 0.3
+        lh = BLOCK_SIZE - BLOCK_SIZE * 0.3
+
+        lt = [self.pos[0] + math.cos(math.radians(360 - (self.rot + 45))) * lw,
+              self.pos[1] + math.sin(math.radians(360 - (self.rot + 45))) * lh]
+        rt = [self.pos[0] + math.cos(math.radians(360 - (self.rot + 135))) * lw,
+              self.pos[1] + math.sin(math.radians(360 - (self.rot + 135))) * lh]
+        lb = [self.pos[0] + math.cos(math.radians(360 - (self.rot + 225))) * lw,
+              self.pos[1] + math.sin(math.radians(360 - (self.rot + 225))) * lh]
+        rb = [self.pos[0] + math.cos(math.radians(360 - (self.rot + 315))) * lw,
+              self.pos[1] + math.sin(math.radians(360 - (self.rot + 315))) * lh]
+
+        self.collision_points = [lt, rt, lb, rb]
+
+    def draw_collision_points(self, screen):
+        if self.collision_points:
+            for p in self.collision_points:
+                if (screen.get_at((int(p[0]), int(p[1]))) == walls):
+                    pygame.draw.circle(screen, (255, 0, 0), (int(p[0]), int(p[1])), 5)
+                else:
+                    pygame.draw.circle(screen, (15, 192, 252), (int(p[0]), int(p[1])), 5)
+
+    def draw_me(self, screen):
+        self.draw_radars(screen)
+        self.draw_center(screen)
+
+    def draw_center(self, screen):
+        pygame.draw.circle(screen, (0, 72, 186), (math.floor(self.pos[0]), math.floor(self.pos[1])), 5)
+
+    def draw_radars(self, screen):
+        for r in self.radars:
+            p, d = r
+            pygame.draw.line(screen, (183, 15, 70), self.pos, p, 1)
+            pygame.draw.circle(screen, (183, 235, 70), p, 5)
 
     def update(self, dt):
         self.draw_path()
         self.automove_to_target(dt)
         self.check_collisions()
+
+        # sensors
+        self.compute_collision_points()
+        self.draw_collision_points(screen)
+
+        self.radars.clear()
+        for i in range(-60, 80, 20):
+            self.compute_radars(i)
+        self.draw_me(screen)
 
 

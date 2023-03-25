@@ -4,11 +4,13 @@ from pathfinding.core.grid import Grid
 from pathfinding.finder.a_star import AStarFinder
 from pathfinding.core.diagonal_movement import DiagonalMovement
 from pygame.sprite import Sprite, collide_rect
+import math
 
 
 vec = pygame.math.Vector2
 FPS = 120
 
+walls = (153, 217, 234, 255)
 LIGHTGRAY = (100, 100, 100)
 
 # 1. BLOCKS
